@@ -2,24 +2,35 @@ import React, { useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 import InputBox from "../../components/forms/InputBox";
 import SubmitButton from "../../components/forms/SubmitButton";
+import axios from "axios";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
       setLoading(true);
       if (!email || !password) {
         setLoading(false);
         return Alert.alert("Please Fill All Fields");
       }
-      console.log("Login Data ===> ", { email, password });
+
+      const { data } = await axios.post(
+        "http://192.168.1.74:8080/api/v1/auth/login",
+        {
+          email,
+          password,
+        }
+      );
+
+      console.log("Login Data ===> ", { data });
 
       setLoading(false);
     } catch (error) {
       setLoading(false);
+      Alert.alert(error.response.data.message);
       console.log(error);
     }
   };
@@ -43,7 +54,6 @@ const Login = ({ navigation }) => {
           setValue={setPassword}
         />
       </View>
-      {/* <Text>{JSON.stringify({ name, email, password }, null, 4)}</Text> */}
       <SubmitButton
         handleSubmit={handleSubmit}
         buttonTitle={"Submit"}
