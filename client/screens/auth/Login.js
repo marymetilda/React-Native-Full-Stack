@@ -3,6 +3,7 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import InputBox from "../../components/forms/InputBox";
 import SubmitButton from "../../components/forms/SubmitButton";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -24,8 +25,8 @@ const Login = ({ navigation }) => {
           password,
         }
       );
-
-      console.log("Login Data ===> ", { data });
+      alert(data && data.message);
+      await AsyncStorage.setItem("@auth", JSON.stringify(data));
 
       setLoading(false);
     } catch (error) {
@@ -34,6 +35,14 @@ const Login = ({ navigation }) => {
       console.log(error);
     }
   };
+
+  // temp function to check local storage data
+  const getLocalStorageData = async () => {
+    const data = await AsyncStorage.getItem("@auth");
+    console.log("local storage", data);
+  };
+
+  getLocalStorageData();
 
   return (
     <View style={styles.container}>
