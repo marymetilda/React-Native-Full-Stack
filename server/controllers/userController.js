@@ -1,4 +1,5 @@
 const userModel = require("../models/userModel");
+const { hashPassword } = require("../utils/authHelper");
 
 const registerController = async (req, res) => {
   try {
@@ -23,6 +24,7 @@ const registerController = async (req, res) => {
         message: "Password is required and 6 characters long!",
       });
     }
+
     // existing user
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
@@ -31,8 +33,16 @@ const registerController = async (req, res) => {
         message: "User already register with this email",
       });
     }
+
+    // hashed password
+    const hashedPassword = await hashPassword(password);
+
     // Save user
-    const user = await userModel({ name, email, password }).save();
+    const user = await userModel({
+      name,
+      email,
+      password: hashedPassword,
+    }).save();
 
     return res.status(200).send({
       success: true,
