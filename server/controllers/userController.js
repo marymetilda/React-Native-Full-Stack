@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel");
-const { hashPassword } = require("../utils/authHelper");
+const { hashPassword, comparePassword } = require("../utils/authHelper");
 
+// Register
 const registerController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -58,4 +59,47 @@ const registerController = async (req, res) => {
   }
 };
 
-module.exports = { registerController };
+// Login
+const loginController = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(500).send({
+        success: false,
+        message: "Please provide Email or Password",
+      });
+    }
+    // find user
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(500).send({
+        success: false,
+        message: "User not found!",
+      });
+    }
+    // match password
+    const match = await comparePassword(password, user.password);
+    if (!match) {
+      return res.status(500).send({
+        success: false,
+        message: "Invalid Credentials!",
+      });
+    }
+
+    res.status(200).send({
+      success: true,
+      message: "Login successful",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send({
+      success: false,
+      message: `Error in login API`,
+      error,
+    });
+  }
+};
+
+module.exports = { registerController, loginController };
