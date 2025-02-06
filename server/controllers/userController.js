@@ -1,3 +1,4 @@
+const JWT = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 const { hashPassword, comparePassword } = require("../utils/authHelper");
 
@@ -87,9 +88,24 @@ const loginController = async (req, res) => {
       });
     }
 
+    // TOKEN JWT
+    const token = await JWT.sign(
+      {
+        _id: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    // undefined password
+    user.password = undefined;
+
     res.status(200).send({
       success: true,
       message: "Login successful",
+      token,
       user,
     });
   } catch (error) {
