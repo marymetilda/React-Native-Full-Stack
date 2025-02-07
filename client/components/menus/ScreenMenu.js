@@ -4,6 +4,7 @@ import Home from "../../screens/Home";
 import Register from "../../screens/auth/Register";
 import Login from "../../screens/auth/Login";
 import { AuthContext } from "@/context/authContext";
+import HeaderMenu from "../../components/menus/HeaderMenu";
 
 const ScreenMenu = () => {
   // global state
@@ -16,14 +17,18 @@ const ScreenMenu = () => {
   return (
     <Stack.Navigator initialRouteName="Login">
       {authenticatedUser ? (
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
+        <>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{
+              title: "Full Stack App",
+              headerRight: () => <HeaderMenu />,
+            }}
+          />
+        </>
       ) : (
         <>
-          {" "}
           <Stack.Screen
             name="Register"
             component={Register}
