@@ -118,4 +118,45 @@ const loginController = async (req, res) => {
   }
 };
 
-module.exports = { registerController, loginController };
+// update
+const updateUserController = async (req, res) => {
+  try {
+    const { name, password, email } = req.body;
+    // find user
+    const user = await userModel.findOne({ email });
+
+    // Password validate
+    if (password && password.length < 6) {
+      return res.status(400).send({
+        success: false,
+        message: "Password is required and should be 6 character long",
+      });
+    }
+
+    const hashedPassword = password ? await hashPassword(password) : undefined;
+    // updated user
+    const updatedUser = await userModel.findOneAndUpdate(
+      { email },
+      {
+        name: name || user.name,
+        password: hashedPassword || user.password,
+      },
+      { new: true }
+    );
+    updatedUser.password = undefined;
+    res.status(200).send({
+      success: true,
+      message: "Profile Updated Please Login",
+      updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Error in user update Api",
+      error,
+    });
+  }
+};
+
+module.exports = { registerController, loginController, updateUserController };
