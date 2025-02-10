@@ -6,12 +6,15 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { PostContext } from "@/context/postContext";
 import FooterMenu from "../components/menus/FooterMenu";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import axios from "axios";
 
 const Post = ({ navigation }) => {
+  // global state
+  const [posts, setPosts] = useContext(PostContext);
   // local state
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -33,6 +36,7 @@ const Post = ({ navigation }) => {
       });
       setLoading(false);
       alert(data?.message);
+      setPosts([...posts, data?.post]);
       navigation.navigate("Home");
     } catch (error) {
       alert(error.response.data.message || error.message);
