@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "../../screens/Home";
 import Post from "../../screens/Post";
 import About from "../../screens/About";
+import MyPosts from "../../screens/MyPosts";
 import Account from "../../screens/Account";
 import Register from "../../screens/auth/Register";
 import Login from "../../screens/auth/Login";
@@ -48,6 +49,14 @@ const ScreenMenu = () => {
           <Stack.Screen
             name="Account"
             component={Account}
+            options={{
+              headerBackTitle: "Back",
+              headerRight: () => <HeaderMenu />,
+            }}
+          />
+          <Stack.Screen
+            name="MyPosts"
+            component={MyPosts}
             options={{
               headerBackTitle: "Back",
               headerRight: () => <HeaderMenu />,
