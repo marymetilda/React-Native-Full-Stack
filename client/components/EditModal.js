@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   Alert,
@@ -12,6 +14,26 @@ import {
 const EditModal = ({ modalVisible, setModalVisible, post }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation();
+
+  // handle update post
+  const updatePostHandler = async (id) => {
+    try {
+      setLoading(true);
+      const { data } = await axios.put(`/post/update-post/${id}`, {
+        title,
+        description,
+      });
+      setLoading(false);
+      alert(data.message);
+      navigation.navigate("Home");
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+      alert(error);
+    }
+  };
 
   // initial post data
   useEffect(() => {
@@ -32,7 +54,6 @@ const EditModal = ({ modalVisible, setModalVisible, post }) => {
       >
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text>{JSON.stringify(post, null, 4)}</Text>
             <Text style={styles.modalText}>Update Your Post</Text>
             <Text>Title</Text>
             <TextInput
@@ -51,9 +72,14 @@ const EditModal = ({ modalVisible, setModalVisible, post }) => {
             <View style={styles.btnContainer}>
               <Pressable
                 style={styles.button}
-                onPress={() => setModalVisible(!modalVisible)}
+                onPress={() => {
+                  updatePostHandler(post && post._id);
+                  setModalVisible(!modalVisible);
+                }}
               >
-                <Text style={styles.textStyle}>UPDATE</Text>
+                <Text style={styles.textStyle}>
+                  {loading ? "Please wait" : "UPDATE"}
+                </Text>
               </Pressable>
               <Pressable
                 style={[styles.button, styles.buttonClose]}
@@ -92,7 +118,9 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     marginBottom: 20,
+    paddingTop: 10,
     backgroundColor: "lightgray",
+    textAlignVertical: "top",
     borderRadius: 10,
     marginTop: 10,
     paddingLeft: 10,
