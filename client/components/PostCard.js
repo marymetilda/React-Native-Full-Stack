@@ -7,7 +7,7 @@ const PostCard = ({ posts }) => {
   return (
     <View>
       <Text style={styles.heading}>Total Posts {posts?.length}</Text>
-      {posts?.map((post, index) => (
+      {posts?.map((post) => (
         <View style={styles.card} key={post?._id}>
           <Text style={styles.title}>Title: {post?.title}</Text>
 
