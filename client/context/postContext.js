@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 const PostContext = createContext();
 
 const PostProvider = ({ children }) => {
   const [loading, setLoading] = useState();
-  const [posts, setPosts] = useState();
+  const [posts, setPosts] = useState([]);
 
   // get posts
   const getAllPosts = async () => {
@@ -26,7 +26,7 @@ const PostProvider = ({ children }) => {
   }, []);
 
   return (
-    <PostContext.Provider value={[posts, setPosts]}>
+    <PostContext.Provider value={[posts, setPosts, getAllPosts]}>
       {children}
     </PostContext.Provider>
   );

@@ -7,12 +7,11 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import EditModal from "../components/EditModal";
 
 const PostCard = ({ posts, myPostScreen }) => {
-  const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [post, setPost] = useState({});
   const navigation = useNavigation();
 
-  // handle delete promt
+  // handle delete prompt
   const handleDeletePrompt = (id) => {
     Alert.alert("Attention", "Are you sure you want to delete this post?", [
       {
@@ -23,7 +22,7 @@ const PostCard = ({ posts, myPostScreen }) => {
       },
       {
         text: "Delete",
-        onPress: handleDeletePost(id),
+        onPress: () => handleDeletePost(id),
       },
     ]);
   };
@@ -31,13 +30,11 @@ const PostCard = ({ posts, myPostScreen }) => {
   // delete post data
   const handleDeletePost = async (id) => {
     try {
-      setLoading(true);
       const { data } = await axios.delete(`post/delete-post/${id}`);
-      setLoading(false);
+
       alert(data?.message);
-      navigation.navigate("Home");
+      navigation.push("Home");
     } catch (error) {
-      setLoading(false);
       console.log(error);
       alert(error);
     }

@@ -39,14 +39,6 @@ const ScreenMenu = () => {
             }}
           />
           <Stack.Screen
-            name="About"
-            component={About}
-            options={{
-              headerBackTitle: "Back",
-              headerRight: () => <HeaderMenu />,
-            }}
-          />
-          <Stack.Screen
             name="Account"
             component={Account}
             options={{
